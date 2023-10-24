@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.order.FeeBillMapper">
+
+    <select id="pageByCondition" resultType="com.rent.common.dto.order.response.FeeBillPageResp" parameterType="com.rent.common.dto.order.resquest.FeeBillReqDto">
+        SELECT
+            fb.id,
+            fb.order_id,
+            fb.amount,
+            fb.`status`,
+            fb.type,
+            fb.create_time,
+            fb.ticket_status,
+            shop.`name` AS shop_name
+        FROM
+            ct_fee_bill fb
+        LEFT JOIN ct_shop shop ON fb.shop_id = shop.shop_id
+        <where>
+            <if test="request.shopName != null and request.shopName != '' ">
+                AND shop.`name` LIKE CONCAT('%',#{request.shopName},'%')
+            </if>
+            <if test="request.shopId != null and request.shopId != '' ">
+                AND shop.shop_id = #{request.shopId}
+            </if>
+            <if test="request.ticketStatus">
+                AND fb.ticket_status = #{request.ticketStatus}
+            </if>
+            <if test="request.status">
+                AND fb.status = #{request.status}
+            </if>
+            <if test="request.type">
+                AND fb.type = #{request.type}
+            </if>
+            <if test="request.status">
+                AND fb.status = #{request.status}
+            </if>
+            <if test="request.startTime != null ">
+                AND fb.create_time <![CDATA[>= ]]> #{request.startTime}
+            </if>
+            <if test="request.endTime != null ">
+                AND fb.create_time <![CDATA[<= ]]> #{request.endTime}
+            </if>
+
+        </where>
+        ORDER BY fb.id desc
+    </select>
+
+    <select id="feeBillDetail" resultType="com.rent.common.dto.export.FeeBillDto" parameterType="com.rent.common.dto.order.FeeBillDetailReqDto">
+        SELECT
+        cfb.order_id AS orderId,
+        cuc.user_name AS userName,
+        cfb.amount AS amount,
+        cuc.telephone AS phone,
+        cfb.order_status as status,
+        cfb.create_time as createTime,
+        flow.create_time as settleDate
+        FROM
+        ct_fee_bill cfb
+        LEFT JOIN ct_user_certification cuc ON cuc.uid = cfb.uid
+        LEFT JOIN ct_shop_fund_flow flow on flow.id = cfb.fund_flow_id
+        <where>
+            <if test="shopId != null and shopId!= '' ">
+                AND cfb.shop_id = #{shopId}
+            </if>
+            <if test="status != null and status != '' ">
+                AND cfb.status = #{status}
+            </if>
+            <if test="startTime != null">
+                AND cfb.create_time <![CDATA[>= ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND cfb.create_time <![CDATA[<= ]]> #{endTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>

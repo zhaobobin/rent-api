@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.product.ShopWithdrawApplyMapper">
+
+    <select id="withDrawApplyPage" resultType="com.rent.common.dto.product.resp.WithdrawApplyPageResp" parameterType="com.rent.common.dto.product.request.WithdrawApplyPageReq">
+        SELECT
+            swa.id,
+            swa.create_time,
+            shop.`name` AS shop_name,
+            swa.amount,
+            swa.`status`,
+            swa.update_time,
+            bu.`name` AS audit_user
+        FROM
+            ct_shop_withdraw_apply swa
+        LEFT JOIN ct_shop shop ON swa.shop_id = shop.shop_id
+        LEFT JOIN ct_backstage_user bu ON bu.id = swa.audit_uid
+        <where>
+            <if test="request.shopName != null and request.shopName != '' ">
+                AND shop.`name` LIKE CONCAT('%',#{request.shopName},'%')
+            </if>
+            <if test="request.status != null">
+                AND swa.`status` = #{request.status}
+            </if>
+            <if test="request.shopId != null">
+                AND swa.shop_id = #{request.shopId}
+            </if>
+        </where>
+        ORDER BY swa.id desc
+    </select>
+
+</mapper>

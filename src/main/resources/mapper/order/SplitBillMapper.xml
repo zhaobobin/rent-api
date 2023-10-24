@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.order.SplitBillMapper">
+
+
+    <select id="buyOutExport" resultType="com.rent.common.dto.export.AccountPeriodBuyOutDto">
+
+        SELECT
+            sb.shop_id as shopId,
+            sb.order_id AS orderId,
+            uobo.order_id AS originOrderId,
+            cuc.user_name as userName,
+            uobo.paid_rent as paidRent,
+            uobo.end_fund as endFund,
+            sb.trans_amount as transAmount,
+            cap.settle_date as settleDate
+
+        FROM
+            ct_split_bill sb
+                LEFT JOIN ct_user_order_buy_out uobo ON sb.order_id = uobo.buy_out_order_id
+                LEFT JOIN ct_user_certification cuc ON uobo.uid = cuc.uid
+                LEFT JOIN ct_account_period cap on sb.account_period_id = cap.id
+        WHERE
+            sb.type = "BUY_OUT"
+          AND sb.account_period_id = #{id}
+    </select>
+
+    <select id="rentExport" resultType="com.rent.common.dto.export.AccountPeriodRentDto">
+        SELECT
+            sb.shop_id as shopId,
+            sb.order_id AS orderId,
+            cuc.user_name as userName,
+            sb.period as period,
+            sb.user_pay_amount as settleAmount,
+            sb.trans_amount AS transAmount,
+            cap.settle_date as settleDate
+        FROM
+            ct_split_bill sb
+                LEFT JOIN ct_user_orders cuo on cuo.order_id = sb.order_id
+                LEFT JOIN ct_user_certification cuc on cuc.uid = cuo.uid
+                LEFT JOIN ct_account_period cap ON cap.id = sb.account_period_id
+        WHERE
+            sb.type = "RENT"
+          AND sb.account_period_id = #{id}
+    </select>
+
+</mapper>

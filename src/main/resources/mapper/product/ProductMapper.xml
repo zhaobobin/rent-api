@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.product.ProductMapper">
+
+
+
+    <select id="selectProductCounts" resultType="java.util.HashMap">
+
+        SELECT
+        count(id) AS allCounts ,
+        count(IF(type=1,TRUE,NULL)) as putOnCounts,
+        count(IF(type!=1,TRUE,NULL)) as notPutOnCounts,
+        count(IF(audit_state=0,TRUE,NULL)) as pendingCounts,
+        count(IF(audit_state=1,TRUE,NULL)) as notPassCounts
+        FROM
+        ct_product
+        <where>
+            delete_time IS NULL
+        </where>
+
+    </select>
+
+
+    <select id="selectBusinessPrdouctCounts" resultType="java.util.HashMap">
+
+        SELECT
+        count(id) AS allCounts ,
+        count(IF(type=1,TRUE,NULL)) as putOnCounts,
+        count(IF(type!=1,TRUE,NULL)) as notPutOnCounts,
+        count(IF(audit_state=0,TRUE,NULL)) as pendingCounts,
+        count(IF(audit_state=1,TRUE,NULL)) as notPassCounts
+        FROM
+        ct_product
+        <where>
+            delete_time IS NULL
+            <if test="model != null and model.productName != null and model.productName != '' ">
+                AND name like concat(concat('%',#{model.productName}),'%')
+            </if>
+            <if test="model != null and model.shopId != null and model.shopId != ''">
+                AND shop_id like concat(concat('%',#{model.shopId}),'%')
+            </if>
+            <if test="model != null and model.categoryIds != null and model.categoryIds != ''">
+                AND category_id = #{model.categoryIds}
+            </if>
+            <if test="model != null and model.type != null and model.type != ''">
+                AND type = #{model.type}
+            </if>
+            <if test="model != null and model.auditState != null and model.auditState != ''">
+                AND audit_state = #{model.auditState}
+            </if>
+        </where>
+
+
+    </select>
+
+
+
+
+    <select id="selectShopProductListAndShop" resultType="java.util.HashMap">
+        SELECT
+        product_id AS productId,
+        `name`,
+        type,
+        audit_state AS auditState,
+        delete_time AS deleteTime,
+        shop_id AS shopId,
+        update_time AS updateTime,
+        sales_volume * 11 AS salesVolume,
+        sale
+        FROM
+        ct_product
+        WHERE
+        audit_state = 2
+        AND delete_time IS NULL
+        AND type = 1
+        AND shop_id = #{shopId}
+        AND hidden = 0
+        ORDER BY
+        update_time DESC
+        LIMIT #{pageNumber}, #{pageSize}
+    </select>
+
+
+    <select id="countShopProductListAndShop" resultType="java.lang.Integer">
+        SELECT
+        count(*)
+        from(
+        select a.product_id as productId,a.`name`,a.type,a.audit_state as auditState,a.delete_time as deleteTime,a.shop_id as shopId,1 as isDirect ,a.update_time  as updateTime from ct_product a
+        UNION ALL
+        select b.product_id as productId,b.`name`,b.type,b.audit_state as auditState,b.delete_time as deleteTime,b.shop_id as shopId,2 as isDirect,b.update_time as updateTime  from ct_product_direct_buy b ) cc
+        where cc.auditState = 2 and cc.deleteTime is null  and cc.type  = 1
+        <if test="shopId != null and shopId != '' ">
+            AND cc.shopId = #{shopId}
+        </if>
+
+
+    </select>
+
+
+</mapper>

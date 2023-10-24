@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.marketing.OrderComplaintsMapper">
+
+    <select id="queryOrderComplaintsPage" resultType="com.rent.common.dto.backstage.resp.OrderComplaintsPageRespVo" parameterType="com.rent.common.dto.backstage.request.QueryOrderComplaintsPageReqVo">
+        SELECT
+        com.id,
+        com.`name`,
+        com.order_id AS orderId,
+        shop.`name` AS shopName,
+        comtype.`name` AS typeName,
+        com.telphone,
+        com.create_time AS createTime,
+        com.`status`
+        FROM
+        ct_order_complaints com
+        LEFT JOIN ct_shop shop ON com.shop_id = shop.shop_id
+        LEFT JOIN ct_order_complaints_type comtype ON com.type_id = comtype.id
+        <where>
+            <if test="request.name != null and request.name != '' ">
+                AND com.`name` LIKE CONCAT('%',#{request.name},'%')
+            </if>
+            <if test="request.orderId != null and request.orderId != '' ">
+                AND com.order_id = #{request.orderId}
+            </if>
+            <if test="request.shopName != null and request.shopName != '' ">
+                AND shop.`name` LIKE CONCAT('%',#{request.shopName},'%')
+            </if>
+            <if test="request.typeId != null">
+                AND com.type_id = #{request.typeId}
+            </if>
+            <if test="request.telphone != null and request.telphone != '' ">
+                AND com.telphone LIKE CONCAT('%',#{request.telphone},'%')
+            </if>
+            <if test="request.status != null">
+                AND com.`status` = #{request.status}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.order.UserOrdersMapper">
+
+    <select id="getRentOrderExport" resultType="com.rent.common.dto.export.OrderExportDto" parameterType="com.rent.common.dto.backstage.ExportRentOrderReq">
+        SELECT
+        orders.order_id as orderId,
+        orders.`status`,
+        orders.product_id as productId,
+        orders.create_time as createTime,
+        orders.rent_start as rentStart,
+        orders.unrent_time as rentEnd,
+        orders.channel_id as channelName,
+        orders.remark,
+        orders.cancel_reason as closeReason,
+        cashes.platform_coupon_reduction as platformCouponReduction,
+        cashes.coupon_reduction as shopCouponReduction,
+        cashes.additional_services_price as additionalServicesPrice,
+        cashes.freeze_price as freezePrice,
+        certification.user_name as userName,
+        certification.telephone,
+        certification.id_card as idNo,
+        shop.`name` AS shopName,
+        scores.multiple_score as riskScore
+        FROM ct_user_orders orders
+        LEFT JOIN ct_user_order_cashes cashes on orders.order_id = cashes.order_id
+        LEFT JOIN ct_user_certification certification on orders.uid = certification.uid
+        LEFT JOIN ct_shop shop ON shop.shop_id = orders.shop_id
+        LEFT JOIN (select order_id,multiple_score from ct_sx_report_record GROUP BY order_id ) scores ON scores.order_id = orders.order_id
+        <where>
+            <if test="shopId != null and shopId != '' ">
+                AND orders.shop_id = #{shopId, jdbcType=VARCHAR}
+            </if>
+            <if test="channelId != null and channelId != '' ">
+                AND orders.channel_id = #{channelId, jdbcType=VARCHAR}
+            </if>
+            <if test="orderType != null and orderType != '' ">
+                AND orders.type = #{orderType, jdbcType=VARCHAR}
+            </if>
+            <if test="createTimeStart != null">
+                AND orders.create_time &gt; #{createTimeStart, jdbcType=TIMESTAMP}
+            </if>
+            <if test="createTimeEnd != null">
+                AND orders.create_time &lt; #{createTimeEnd, jdbcType=TIMESTAMP}
+            </if>
+            <if test="status!=null and status.size()>0 ">
+                AND orders.status  in
+                <foreach collection="status" item="state" index="index" open="(" close=")" separator=",">
+                    #{state}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getOverdueOrderExport" resultType="com.rent.common.dto.export.OrderExportDto" parameterType="com.rent.common.dto.backstage.ExportRentOrderReq">
+        SELECT
+        orders.order_id as orderId,
+        orders.`status`,
+        orders.product_id as productId,
+        orders.create_time as createTime,
+        orders.rent_start as rentStart,
+        orders.unrent_time as rentEnd,
+        orders.channel_id as channelName,
+        orders.remark,
+        orders.cancel_reason as closeReason,
+        cashes.platform_coupon_reduction as platformCouponReduction,
+        cashes.coupon_reduction as shopCouponReduction,
+        cashes.additional_services_price as additionalServicesPrice,
+        cashes.freeze_price as freezePrice,
+        certification.user_name as userName,
+        certification.telephone,
+        certification.id_card as idNo,
+        shop.`name` AS shopName,
+        scores.multiple_score as riskScore
+        FROM ct_user_orders orders
+        LEFT JOIN ct_user_order_cashes cashes on orders.order_id = cashes.order_id
+        LEFT JOIN ct_user_certification certification on orders.uid = certification.uid
+        LEFT JOIN ct_shop shop ON shop.shop_id = orders.shop_id
+        LEFT JOIN ct_sx_report_record scores on scores.order_id = orders.order_id
+        where orders.is_violation in ('02','04')
+        <if test="shopId != null and shopId != '' ">
+            AND orders.shop_id = #{shopId, jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="getNotGiveBackOrderExport" resultType="com.rent.common.dto.export.OrderExportDto" parameterType="com.rent.common.dto.backstage.ExportRentOrderReq">
+        SELECT
+        orders.order_id as orderId,
+        orders.`status`,
+        orders.product_id as productId,
+        orders.create_time as createTime,
+        orders.rent_start as rentStart,
+        orders.unrent_time as rentEnd,
+        orders.channel_id as channelName,
+        orders.remark,
+        orders.cancel_reason as closeReason,
+        cashes.platform_coupon_reduction as platformCouponReduction,
+        cashes.coupon_reduction as shopCouponReduction,
+        cashes.additional_services_price as additionalServicesPrice,
+        cashes.freeze_price as freezePrice,
+        certification.user_name as userName,
+        certification.telephone,
+        certification.id_card as idNo,
+        shop.`name` AS shopName,
+        scores.multiple_score as riskScore
+        FROM ct_user_orders orders
+        LEFT JOIN ct_user_order_cashes cashes on orders.order_id = cashes.order_id
+        LEFT JOIN ct_user_certification certification on orders.uid = certification.uid
+        LEFT JOIN ct_shop shop ON shop.shop_id = orders.shop_id
+        LEFT JOIN ct_sx_report_record scores on scores.order_id = orders.order_id
+        <where>
+            orders.status = '06' and  unrent_time &lt; now()
+            <if test="shopId != null and shopId != '' ">
+                AND orders.shop_id = #{shopId, jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+
+
+
+
+    <select id="queryOpeOrderByCondition" resultType="com.rent.common.dto.order.BackstageUserOrderDto" parameterType="com.rent.common.dto.order.OrderByConditionRequest">
+        SELECT
+        orders.order_id,
+        orders.original_order_id,
+        orders.channel_id,
+        shop.`name` AS shop_name,
+        product.`name` AS product_name,
+        cert.user_name AS real_name,
+        cert.telephone,
+        orders.create_time as place_order_time,
+        orders.`status`,
+        orders.examine_status,
+        orders.close_type,
+        address.telephone AS address_user_phone,
+        orders.cancel_reason,
+        orders.rent_start,
+        orders.unrent_time,
+        orders.audit_label,
+        audit.approve_status,
+        audit.approve_time,
+        audit.approve_user_name
+        FROM
+        ct_user_orders orders
+        LEFT JOIN ct_shop shop ON orders.shop_id = shop.shop_id
+        LEFT JOIN ct_order_audit_record audit ON orders.order_id = audit.order_id
+        LEFT JOIN ct_user_certification cert ON orders.uid = cert.uid
+        LEFT JOIN ct_product product ON orders.product_id = product.product_id
+        LEFT JOIN ct_order_address address ON orders.order_id = address.order_id
+        <where>
+            <if test="request.isMyAuditOrder == true">
+                AND orders.`order_id` in (select order_id from ct_order_audit_user where backstage_user_id =#{request.backstageUserId} union select "" as `order_id`  )
+            </if>
+            <if test="request.addressUserPhone != null and request.addressUserPhone != '' ">
+                AND address.`telephone` = #{request.addressUserPhone}
+            </if>
+            <if test="request.rentCredit != null and request.rentCredit != '' ">
+                AND orders.`rent_credit` = #{request.rentCredit}
+            </if>
+            <if test="request.orderId != null and request.orderId != '' ">
+                AND orders.`order_id` = #{request.orderId}
+            </if>
+            <if test="request.userName != null and request.userName != '' ">
+                AND cert.`user_name` = #{request.userName}
+            </if>
+            <if test="request.telephone != null and request.telephone != '' ">
+                AND cert.`telephone` = #{request.telephone}
+            </if>
+            <if test="request.idCard != null and request.idCard != '' ">
+                AND cert.`id_card` = #{request.idCard}
+            </if>
+            <if test="request.status != null and request.status != '' ">
+                AND orders.`status` = #{request.status}
+            </if>
+            <if test="request.closeType != null and request.closeType != '' ">
+                AND orders.`close_type` = #{request.closeType}
+            </if>
+            <if test="request.shopId != null and request.shopId != '' ">
+                AND orders.`shop_id` = #{request.shopId}
+            </if>
+
+            <if test="request.creditLevel != null and request.creditLevel != '' ">
+                AND orders.`credit_level` = #{request.creditLevel}
+            </if>
+            <if test="request.productName != null and request.productName != '' ">
+                AND product.`name` = #{request.productName}
+            </if>
+            <if test="request.shopName != null and request.shopName != '' ">
+                AND shop.`name` = #{request.shopName}
+            </if>
+            <if test="request.channelId != null and request.channelId != '' ">
+                AND orders.channel_id = #{request.channelId}
+            </if>
+            <if test="request.createTimeStart != null ">
+                AND orders.create_time <![CDATA[>= ]]> #{request.createTimeStart}
+            </if>
+            <if test="request.createTimeEnd != null ">
+                AND orders.create_time <![CDATA[<= ]]> #{request.createTimeEnd}
+            </if>
+            <if test="request.unrentDateEnd != null ">
+                AND orders.unrent_time <![CDATA[<= ]]> #{request.unrentDateEnd}
+            </if>
+            <if test="request.approveStatus != null ">
+                AND audit.approve_status = #{request.approveStatus}
+            </if>
+            <if test="request.approveUid != null ">
+                AND audit.approve_uid = #{request.approveUid}
+            </if>
+            <if test="request.approveTime != null ">
+                AND audit.approve_time <![CDATA[>= ]]> #{request.approveTime[0]} AND  audit.approve_time <![CDATA[<= ]]> #{request.approveTime[1]}
+            </if>
+            <if test="request.examineStatusList!= null">
+                and orders.examine_status in
+                <foreach collection="request.examineStatusList" close=")" open="(" item="item" separator=",">
+                    '${item}'
+                </foreach>
+            </if>
+            <if test="request.violationStatusList!= null">
+                and orders.is_violation in
+                <foreach collection="request.violationStatusList" close=")" open="(" item="item" separator=",">
+                    '${item}'
+                </foreach>
+            </if>
+            <if test="request.orderTypeList!= null">
+                and orders.type in
+                <foreach collection="request.orderTypeList" close=")" open="(" item="item" separator=",">
+                    '${item}'
+                </foreach>
+            </if>
+
+            <if test="request.orderType != null ">
+                AND orders.type = #{request.orderType}
+            </if>
+            AND orders.`delete_time` is null ORDER BY orders.id desc
+        </where>
+    </select>
+
+</mapper>

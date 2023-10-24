@@ -1,0 +1,185 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  api-docs:
+    enabled: true
+  application:
+    name: rent
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 200MB
+
+  redis:
+    password: 123456
+    database: 0
+    port: 6379
+    host: 58.87.94.48 
+    jedis:
+      pool:
+        max-idle: 30
+        max-active: 8
+        max-wait: 10000
+        min-idle: 10
+  rabbitmq:
+    host: 58.87.94.48 
+    port: 5672
+    virtual-host: dev
+    username: root
+    password: 123456
+    listener:
+      simple:
+        acknowledge-mode: manual
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 200MB
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+    #      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MyScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 10000
+            useProperties: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+  shardingsphere:
+    datasource:
+      names: prod
+      prod:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/rental?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowMultiQueries=true&useSSL=false
+        username: root
+        password: zbb820502
+        type: com.alibaba.druid.pool.DruidDataSource
+    sharding:
+      tables:
+        ct_order_by_stages:
+          actualDataNodes: prod.ct_order_by_stages_$->{0..9}
+          tableStrategy:
+            standard:
+              shardingColumn: order_id
+              preciseAlgorithmClassName: com.rent.config.sharing.OrderIdShardingAlgorithm
+
+
+mybatis-plus:
+  typeAliasesPackage: com.rent.model
+  global-config:
+    id-type: 0
+    db-column-underline: true
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    jdbc-type-for-null: 'null'
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+sms:
+  sender: xunda
+  aliyun:
+    accessKey: '*************'
+    accessSecret: '*************'
+  #迅达短信配置
+  xunda:
+    account: XXXXXXX
+    password: XXXXXXX
+    ext-no: XXXXXXX
+  #布云短信配置
+  buyun:
+    account: 'XXXXXX'
+    password: 'XXXXXX'
+    ext-no: 'XXXXXX'
+
+#蚂蚁链以及保险配置
+ant-chain:
+  accessKey: '*************'
+  accessSecret: '*************'
+  leaseId: '*************'
+#OCR身份证照片识别配置
+ocr:
+  api-id: 'XXXXXXXXXXXXXXXXXXXXXXXXXX'
+  api-secret: 'XXXXXXXXXXXXXXXXXXXXXXXXXX'
+#人脸识别配置
+face:
+  keyId: 'XXXXXXX'
+  keySecret: 'XXXXXXX'
+  sceneId: 'XXXXXXX'
+#首新 二要素，风控报告 ，电子合同，物流 配置
+sx:
+  institution-id: 'XXXXXXX'
+  aes-key: 'XXXXXXX'
+oss:
+  endpoint: oss-cn-XXXXXXX.aliyuncs.com
+  accessId: 'XXXXXXX'
+  accessKey: 'XXXXXXX'
+  bucketName: 'XXXXXXX'
+  fileUrlPrefix: https://XXXXXXX.oss-cn-chengdu.aliyuncs.com/ # oos 资源请求前缀
+
+outside:
+  app_name: 'XXXXXXX' #小程序名称
+  app_code: 'XXXXXXX' #小程序名称拼音首字母（大写）
+  app_logo_url: 'XXXXXXX' # 平台logo 路径
+  alipay_search_png: 'XXXXXXX' # oss url路径，商家中心生成商品二维码需要
+  domain: 'XXXXXXX' #域名
+  company: 'XXXXXXX' #公司名称
+  address: 'XXXXXXX' #公司地址
+  license_no: 'XXXXXXX' #公司营业执照编号
+  sign_city: 'XXXXXXX' #公司地址所在地级市
+  bank: 'XXXXXXX' #公司公户开户行
+  bank_card_no: 'XXXXXXX' #公司公户卡号
+  legal_name: 'XXXXXXX' # 法人姓名
+  legal_id_no: 'XXXXXXX' # 法人身份证号码
+  legal_phone: 'XXXXXXX' # 法人电话
+  contract_phone: 'XXXXXXX' # 客服电话
+  e_mail: 'XXXXXXX' # 邮箱
+  alipay_account: 'XXXXXXX' # 支付宝账号
+
+  service_id: '***' #芝麻免押服务id
+  parent_id: 'XXXXXXX' # 小程序PID
+  app_id: 'XXXXXXX' #小程序APPID
+  alipay_interface_content_key: 'XXXXXXX' #接口内容加密方式
+  alipay_cert_root: 'XXXXXXX' # 小程序证书路径
+  alipay_cert_public: 'XXXXXXX' #小程序证书路径
+  app_cert_public: 'XXXXXXX' #小程序证书路径
+  private_key: 'XXXXXXX' # 小程序私钥 支付宝工具生成的
+
+suning:
+  open_sign: false # 是否开启银行卡签约功能
+  app_id: 'XXXXXXX' # 应用唯一标识
+  saler_merchant_no: 'XXXXXXX'  # 商户号
+  sign_key_index: 'XXXXXXX' # 公钥索引
+  goods_type: 'XXXXXXX' # 商品类型编码
+  # 苏宁颁发的加密公钥
+  epp_public_key: 'XXXXXXX'
+  # 苏宁颁发的验签公钥
+  epp_public_sign_key: 'XXXXXXX'
+  # 商户端生产的私钥
+  merchant_private_key: 'XXXXXXX'
+  # 商户端生产的公钥
+  merchant_public_key: 'XXXXXXX'
+  env_name: 'PRE'
+
+
+server:
+  port: 9001
+
+knife4j:
+  enable: true
+
+
+

@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        .layout{
+            font-family: SimHei;
+        }
+    </style>
+    <title>协议</title>
+</head>
+<body>
+<div class="layout">
+    <h1 style="text-align: center;">个人信息授权书</h1>
+    <p>为了保障您的合法权益，您应当阅读并遵守本授权书，请您务必审慎阅读、充分理解授权书条款内容。</p>
+    <p>一、本人同意并授权<span th:text="${platform}"></span>将自己的姓名、手机号、身份证号传送给杭州首新网络科技有限公司，目的是请杭州首新网络科技有限公司提供信用风险评估服务，本人授权杭州首新网络科技有限公司传输、查询、核实、采集、整理、保存、加工能够用于判断个人信用风险状况的各类信息（包括但不限于个人名字、手机号码、身份证号、地址、债务、支付、通信、消费、社保、互联网行为以及前述信息对个人信用状况形成的分析、评价类等信息）并同意杭州首新网络科技有限公司可以将本人上述信息和分析结果传输给<span th:text="${platform}"></span>。</p>
+    <p>二、为便于向本人提供更加优质的服务和产品，本人授权杭州首新网络科技有限公司可以将上述信息在进行了非指向性和脱敏化处理后，分享给必要的合作伙伴，或进行其他商业用途。</p>
+
+
+    <p style="font-weight:bold">授权人声明：</p>
+    <p style="font-weight:bold">本授权书是本人向<span th:text="${platform}"></span>及杭州首新网络科技有限公司做出的承诺，效力具有独立性，不因其他任何合同条款无效而无效。</p>
+    <p>以上授权期限为本人作出本授权承诺之日起至本人与<span th:text="${platform}"></span>所有业务终结之日止。</p>
+
+
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>授权人：<span th:text="${userName}"></span></p>
+    <p>授权日期：<span th:text="${createTime}"></span></p>
+</div>
+
+
+</body>
+</html>

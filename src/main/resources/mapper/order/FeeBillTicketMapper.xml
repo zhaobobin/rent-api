@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.order.FeeBillTicketMapper">
+
+    <select id="pageTicket" resultType="com.rent.common.dto.order.response.FeeBillTicketPageResp" parameterType="com.rent.common.dto.order.resquest.FeeBillTicketPageReq">
+        SELECT
+            fbt.id,
+            fbt.create_time,
+            shop.`name` AS shop_name,
+            fbt.amount,
+            fbt.ticket_status,
+            fbt.update_time,
+            aduser.`name` AS audit_user
+        FROM
+            ct_fee_bill_ticket fbt
+        LEFT JOIN ct_shop shop ON fbt.shop_id = shop.shop_id
+        LEFT JOIN ct_backstage_user aduser ON fbt.audit_uid = aduser.id
+        <where>
+            <if test="request.shopName != null and request.shopName != '' ">
+                AND shop.`name` LIKE CONCAT('%',#{request.shopName},'%')
+            </if>
+            <if test="request.ticketStatus != null">
+                AND fbt.`ticket_status` = #{request.ticketStatus}
+            </if>
+        </where>
+        ORDER BY fbt.id desc
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.product.ProductSpecValueMapper">
+
+
+    <select id="selectBySpecId" resultType="com.rent.model.product.ProductSpecValue">
+		select `name`,ct_product_spec_value.id as productSpecId from  ct_product_spec
+		left join ct_product_spec_value on ct_product_spec.id = ct_product_spec_value.product_spec_id
+		 where
+		ct_product_spec.id = #{specId}
+		and ct_product_spec.delete_time is null
+	</select>
+
+
+    <select id="selectBySpecIds" resultType="com.rent.model.product.ProductSpecValue">
+		select `name`,ct_product_spec_value.id as productSpecId from  ct_product_spec
+		left join ct_product_spec_value on ct_product_spec.id = ct_product_spec_value.product_spec_id
+		where
+		ct_product_spec.id  in
+		<foreach collection="specIds" item="item" open="(" close=")" separator="," >
+			#{item}
+		</foreach>
+		and ct_product_spec.delete_time is null
+	</select>
+
+
+</mapper>

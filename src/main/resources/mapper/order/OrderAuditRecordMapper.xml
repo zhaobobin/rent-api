@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.order.OrderAuditRecordMapper">
+
+
+    <select id="getMinAssignedAuditUser" resultType="com.rent.model.order.OrderAuditRecord">
+        SELECT
+            au.backstage_user_id,
+            COUNT(ar.id) AS count
+        FROM
+            ct_audit_user au
+            LEFT JOIN ct_order_audit_record ar ON au.backstage_user_id = ar.approve_uid
+            AND ar.approve_status = "01"
+        WHERE
+            au.`status` = "VALID"
+          AND au.type = #{type}
+          AND au.shop_id = #{shopId}
+        GROUP BY
+            au.backstage_user_id
+        ORDER BY
+            count ASC
+            LIMIT 1
+    </select>
+</mapper>

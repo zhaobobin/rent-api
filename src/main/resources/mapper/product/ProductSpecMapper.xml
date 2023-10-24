@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.product.ProductSpecMapper">
+    <select id="selectByItemId" resultType="map">
+		SELECT
+		ct_platform_spec.`name`,ct_product_spec.id,ct_product_spec.spec_id as opeSpecId
+		FROM ct_product_spec
+		LEFT JOIN ct_platform_spec ON ct_product_spec.spec_id=ct_platform_spec.id
+		WHERE ct_product_spec.delete_time is null
+		AND item_id=#{itemId}
+		GROUP BY ct_product_spec.spec_id
+	</select>
+
+
+
+	<select id="selectProductopeSpecId" resultType="map">
+		SELECT
+		ct_product_spec.spec_id as opeSpecId,ct_platform_spec.`name`,ct_product_spec.id
+		FROM ct_product_spec
+		LEFT JOIN ct_platform_spec ON ct_product_spec.spec_id=ct_platform_spec.id
+		WHERE ct_product_spec.delete_time is null
+		AND item_id=#{itemId}
+		GROUP BY ct_product_spec.spec_id
+	</select>
+
+
+	<select id="selectProductopeSpecInfo" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
+		SELECT
+		ct_product_spec.id
+		FROM ct_product_spec
+		LEFT JOIN ct_platform_spec ON ct_product_spec.spec_id=ct_platform_spec.id
+		WHERE ct_product_spec.delete_time is null
+		AND item_id=#{itemId}
+		ANd ct_product_spec.spec_id=#{opeSpecId}
+	</select>
+
+
+	<select id="selectRepairProductInfo" resultType="com.rent.model.product.ProductSpec">
+		SELECT
+		*
+		FROM ct_product_spec
+		WHERE delete_time is null
+		<if test="itemId != null and itemId != ''">
+			AND item_id=#{itemId}
+		</if>
+		GROUP BY item_id
+		having count(item_id) = 1
+	</select>
+
+	<select id="selectRepairProductInfoV1" resultType="map">
+        select bb.id,bb.item_id as itemId,bb.totol from (
+		select *,count(aa.item_id) as totol from (
+		SELECT
+		sku.id,
+		sku.item_id
+		FROM
+		ct_product_skus sku
+		WHERE sku.delete_time is null
+		and	sku.item_id IN (
+		SELECT item_id FROM ct_product_skus WHERE id IN
+		( SELECT sku_id FROM ct_product_sku_values WHERE create_time &gt;=  '2020-10-19 17:45:18' AND create_time &lt;=  '2020-10-19 17:55:18' )
+		)
+		)aa GROUP BY aa.item_id
+		) bb where bb.totol>1
+	</select>
+
+
+
+
+</mapper>

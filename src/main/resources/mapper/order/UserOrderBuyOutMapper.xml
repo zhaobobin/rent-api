@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rent.mapper.order.UserOrderBuyOutMapper">
+
+
+    <select id="getBuyOutOrder" resultType="com.rent.common.dto.export.BuyOutOrderExportDto" parameterType="com.rent.common.dto.backstage.ExportBuyOutOrderReq">
+        SELECT
+        buyOutOrder.buy_out_order_id AS buyOutOrderId,
+        buyOutOrder.order_id AS orderId,
+        buyOutOrder.state AS `status`,
+        buyOutOrder.sale_price AS salePrice,
+        buyOutOrder.paid_rent AS paidRent,
+        buyOutOrder.end_fund AS endFund,
+        buyOutOrder.create_time AS createTime,
+        userCert.telephone,
+        userCert.id_card AS idNo,
+        userCert.user_name AS userName,
+        orders.product_id AS productId
+        FROM
+        ct_user_order_buy_out buyOutOrder
+        LEFT JOIN ct_user_certification userCert ON buyOutOrder.uid = userCert.uid
+        LEFT JOIN ct_user_orders orders ON buyOutOrder.order_id = orders.order_id
+        <where>
+            <if test="shopId != null and shopId != '' ">
+                AND buyOutOrder.shop_id = #{shopId, jdbcType=VARCHAR}
+            </if>
+
+            <if test="createTimeStart != null">
+                AND buyOutOrder.create_time &gt; #{createTimeStart, jdbcType=TIMESTAMP}
+            </if>
+            <if test="createTimeEnd != null">
+                AND buyOutOrder.create_time &lt; #{createTimeEnd, jdbcType=TIMESTAMP}
+            </if>
+            <if test="status!=null and status.size()>0 ">
+                AND buyOutOrder.state  in
+                <foreach collection="status" item="state" index="index" open="(" close=")" separator=",">
+                    #{state}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>

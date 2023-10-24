@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rent.mapper.order.ChannelUserOrdersMapper">
+
+	<select id="channelRentOrder" resultType="com.rent.common.dto.order.ChannelOrdersExportDto" parameterType="com.rent.common.dto.order.resquest.ChannelUserOrdersReqDto">
+	SELECT
+		orders.order_id as orderId,
+		cmc.name as channelName,
+	    orders.product_name as productName,
+		orders.total_amount as totalRent,
+		orders.total_periods as totalPeriods,
+		cuo.status as status,
+		orders.settle_status as settleStatus,
+		orders.scale as scale,
+		orders.user_name as realName,
+		orders.phone as telephone,
+	    orders.shop_name as shopName,
+	    orders.create_time as createTime
+	FROM
+		ct_channel_user_orders orders
+		LEFT JOIN ct_marketing_channel cmc ON cmc.uid = orders.marketing_channel_id
+		LEFT JOIN ct_user_orders cuo ON orders.order_id = cuo.order_id
+		<where>
+			<if test="marketingChannelId != null and marketingChannelId != '' ">
+				AND orders.marketing_channel_id = #{marketingChannelId}
+			</if>
+			<if test="timeBegin != null">
+				AND orders.create_time &gt; #{timeBegin, jdbcType=TIMESTAMP}
+			</if>
+			<if test="timeEnd != null">
+				AND orders.create_time &lt; #{timeEnd, jdbcType=TIMESTAMP}
+			</if>
+			<if test="status!=null and status != '' ">
+				AND orders.status = #{status}
+			</if>
+			<if test="settleStatus!=null and settleStatus != '' ">
+				AND orders.settle_status = #{settleStatus}
+			</if>
+		</where>
+	</select>
+</mapper>
