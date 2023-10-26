@@ -135,7 +135,7 @@ outside:
   app_code: 'XXXXXXX' #小程序名称拼音首字母（大写）
   app_logo_url: 'XXXXXXX' # 平台logo 路径
   alipay_search_png: 'XXXXXXX' # oss url路径，商家中心生成商品二维码需要
-  domain: 'XXXXXXX' #域名
+  domain: 'https://www.huakaiyousheng.cn/' #域名
   company: 'XXXXXXX' #公司名称
   address: 'XXXXXXX' #公司地址
   license_no: 'XXXXXXX' #公司营业执照编号
@@ -150,13 +150,13 @@ outside:
   alipay_account: 'XXXXXXX' # 支付宝账号
 
   service_id: '***' #芝麻免押服务id
-  parent_id: 'XXXXXXX' # 小程序PID
-  app_id: 'XXXXXXX' #小程序APPID
-  alipay_interface_content_key: 'XXXXXXX' #接口内容加密方式
-  alipay_cert_root: 'XXXXXXX' # 小程序证书路径
-  alipay_cert_public: 'XXXXXXX' #小程序证书路径
-  app_cert_public: 'XXXXXXX' #小程序证书路径
-  private_key: 'XXXXXXX' # 小程序私钥 支付宝工具生成的
+  parent_id: '2088002661210626' # 小程序PID
+  app_id: '2021004124618044' #小程序APPID
+  alipay_interface_content_key: '7zv1XrwKsRHKizVB+a9/fQ==' #接口内容加密方式
+  alipay_cert_root: './cert/alipayRootCert.crt' # 小程序证书路径
+  alipay_cert_public: './cert/alipayCertPublicKey_RSA2.crt' #小程序证书路径
+  app_cert_public: './cert/appCertPublicKey_2021004124618044.crt' #小程序证书路径
+  private_key: 'MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCrJ47GZEmRkMF8bkMoCBjpst5PI8Gc8AvWl1bSvmRpvO2fBNzRQHTnpEu5OtGOdgQsw2vi044Zu8wub+dAOGjGF5kfX4gKaF/KlQ0V0H+AW6wafcxPBwl0JYHx71YuE117AcJBeFIHIvkvyU0lmfkvcGxZ9RV7ZdtAFqcn7lcGVwHki5P5nbS+6VCSSS5WbO8Mx9tYzliudkNb4ls5mu8cKl751wHT73eMuJqJGfA7Ky9nfngsN1m1BDtmHcME1ssLV19bobYFqUcok747TOnjoyr/FXr61LN4IFEQKm/IlWy3WURl7Uxrc5ui1EtILthlNi/zS+ra8YZoaY+SjFQlAgMBAAECggEAJvWcNGDDtlTjFjXrJ4OgWCIVJKKZAeZKa5CLfPFF3iPZWyc6NI+djNUDP6i55tnKXX4mYr2RTR5IfhGO7Dlq8ByTCGcwil3z4CNJlTueqlMzu9wC08JgToXzLGU0ksxprQRbeZev5Fv7qPsDipmf9UJ8B4YYW7x1ygLeDeLdAF4RQeh2JBPzdhe53Hr22CZCyXnMVY/Ei39Ka4O5cOzJM38N402Bok6FJUuBjLuMqT05VP8ORujOrfNCEgi+ZtuE7tcw/gMQfTwtWcphKjiBmrERRGvO9i5XnXDcD1UjSvenOGck4M+xyUNznp6eVK3LYOadfVBULj/m/v1zwmdIyQKBgQD22pgG5ZVpISPXROARRfOdGZlVYJPDXkB29Zj+Ca6mnpZgUOqegeK/K6t1b5RsRkZBgTbqXTTmGoVo5O7kOmhekWV+Gz+snwf36H+9noHcCDL5mjb3zeC3U6LRc3SuOPbaqO0FF8ebNUS4x9VBtdLGmPDkgeNUFrx1D1a8Mat8fwKBgQCxfvTR836bjI5jtgG3UWPjRPVh1zXYWtFyBMc8o8lgaEtzaeLdcAsmnwYYOalSluzqkQ3N4u5zE1/3puwS//Bmme4J73zMaEznf6Up4+luYafuTiohzqapz29MVVYO/L5qys3nGeaiZyNOCd/kWHVClyRXAqhvQMp61dKQYuttWwKBgBR20K2ZsMYzWh5Jdm3YJ7b5XU3HoNhMYvm5qII+2Ty03vCDJMAZMmv4udEVe+9x7/cUODI7odwFjNPCTs+ay/YzBX/r0F6GHIn/uz9D+a38/ATXNQFcDuoDw/arJJwg2s4LvQJ0EzcZtmW/Iz28TgnqueWnoungrKTjraQSVg4PAoGAY8yfeSEw0eMg+J2Qr3Na96GBWyb3hpPh6fsXz1fEVamuqtEhlyJ1kpydf6eENgTYZzdyDI6JRjjhn8zCNhikIfxw5DM89225t/yEcF5OlRrholNeyy13dklFKiVdQwYHRuKLDWL509yr9CgHNEwsemmjLC05aXyDnLd3Mmn8N7sCgYAgZaE718n9O2X3egazUNFCRZg5sHudBEPe0u7pIhMtVtFvTsfID6cnIdOL0qDdHi7tbQe6HZ8GSY4No52JcV5G3UISgf7Lmv1Q+8bW8/Ul10i3o0lw6tjWUF6994dSW68fZTk0cFVfh+dYUlYtunvFvr2yAoh8T7zUx3WsA2GorA==' # 小程序私钥 支付宝工具生成的
 
 suning:
   open_sign: false # 是否开启银行卡签约功能
