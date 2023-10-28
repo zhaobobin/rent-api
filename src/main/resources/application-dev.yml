@@ -65,9 +65,12 @@ spring:
       names: prod
       prod:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/rental?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowMultiQueries=true&useSSL=false
-        username: root
-        password: zbb820502
+#        url: jdbc:mysql://localhost:3306/rental?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowMultiQueries=true&useSSL=false
+#        username: root
+#        password: zbb820502
+        url: jdbc:mysql://58.87.94.48:3306/rental?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&allowMultiQueries=true&useSSL=false
+        username: visitor
+        password: Visitor820502!
         type: com.alibaba.druid.pool.DruidDataSource
     sharding:
       tables:
